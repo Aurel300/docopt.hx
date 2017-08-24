@@ -1,6 +1,18 @@
 # `docopt.hx` – Haxe port of docopt #
 
-See https://github.com/docopt/docopt/ for the reference Python implementation.
+See [docopt](https://github.com/docopt/docopt/) for the reference Python implementation.
+
+## Installing and using ##
+
+With Haxe installed, simply use `haxelib` to install:
+
+    haxelib git docopt https://github.com/Aurel300/docopt.hx
+
+Then in your compilation arguments, specify:
+
+    -lib docopt
+
+The API only consists of the static method `org.docopt.Docopt.parse`, whose signature is identical to that of the Python reference. See also the example below.
 
 ## Example ##
 
@@ -40,6 +52,8 @@ Options:
 }
 ```
 
+(The above code is also available in the `example/` directory with build instructions.)
+
 And that's it. Invoking the above code (compiled to a binary, e.g. using the `cpp` target) like so:
 
     ./naval ship Napoleon move 5 2 --speed=3
@@ -64,4 +78,9 @@ Results in:
 
 ## Differences from the reference implementation ##
 
-(TODO)
+ - The main class is located in the package `org.docopt.Docopt`
+ - The `docopt` function is renamed to `Docopt.parse`, but its signature remains the same
+
+## Version ##
+
+This is `docopt.hx` version `0.6.2`, based on the reference implementation version `0.6.2`. It passes all the language-agnostic tests as of the time of writing (see the `test/` directory).

@@ -3,6 +3,7 @@ package org.docopt;
 using StringTools;
 using org.docopt.Docopt;
 
+@:allow(org.docopt)
 class Docopt {
   public static dynamic function exit(code:Int):Void {
     Sys.exit(code);
@@ -16,14 +17,14 @@ class Docopt {
    * Python-like utility functions.
    */
   
-  public static function regAll(re:EReg, source:String):Array<String> {
+  private static function regAll(re:EReg, source:String):Array<String> {
     return [ while (re.match(source)) {
         source = re.matchedRight();
         re.matched(0);
       } ];
   }
   
-  public static function regAllGroups(
+  private static function regAllGroups(
     re:EReg, source:String, groups:Int
   ):Array<Array<String>> {
     return [ while (source != null && re.match(source)) {
@@ -32,7 +33,7 @@ class Docopt {
       } ];
   }
   
-  public static function regSplit(re:EReg, source:String):Array<String> {
+  private static function regSplit(re:EReg, source:String):Array<String> {
     var ret = [];
     while (re.match(source)) {
       ret.push(re.matchedLeft());
@@ -45,11 +46,11 @@ class Docopt {
     return ret;
   }
   
-  public static function isUpper(s:String):Bool {
+  private static function isUpper(s:String):Bool {
     return s.toUpperCase() == s && s.toLowerCase() != s.toUpperCase();
   }
   
-  public static function lstrip(s:String, c:String):String {
+  private static function lstrip(s:String, c:String):String {
     for (i in 0...s.length) {
       if (s.charAt(i) != c) {
         return s.substr(i);
@@ -58,11 +59,11 @@ class Docopt {
     return "";
   }
   
-  public static function split(s:String):Array<String> {
+  private static function split(s:String):Array<String> {
     return ~/\s+/g.split(s.trim());
   }
   
-  public static function listSet<T>(arr:Array<T>, ?eq:T->T->Bool):Array<T> {
+  private static function listSet<T>(arr:Array<T>, ?eq:T->T->Bool):Array<T> {
     if (eq == null) {
       eq = ((a, b) -> a == b);
     }
@@ -75,7 +76,7 @@ class Docopt {
     return ret;
   }
   
-  public static function listIn<T>(arr:Array<T>, s:T, ?eq:T->T->Bool):T {
+  private static function listIn<T>(arr:Array<T>, s:T, ?eq:T->T->Bool):T {
     if (eq == null) {
       eq = ((a, b) -> a == b);
     }
@@ -87,7 +88,7 @@ class Docopt {
     return null;
   }
   
-  public static function count<T>(arr:Array<T>, s:T, ?eq:T->T->Bool):Int {
+  private static function count<T>(arr:Array<T>, s:T, ?eq:T->T->Bool):Int {
     if (eq == null) {
       eq = ((a, b) -> a == b);
     }
@@ -100,7 +101,7 @@ class Docopt {
     return ret;
   }
   
-  public static function bool(value:Dynamic):Bool {
+  private static function bool(value:Dynamic):Bool {
     if (value == null) {
       return false;
     }
@@ -119,7 +120,7 @@ class Docopt {
     return true;
   }
   
-  public static function partition(s:String, c:String):Array<String> {
+  private static function partition(s:String, c:String):Array<String> {
     var split = s.split(c);
     if (split.length > 1) {
       return [split[0], c, split.slice(1).join(c)];
