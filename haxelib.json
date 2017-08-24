@@ -1,0 +1,12 @@
+{
+  "name": "docopt",
+  "license": "MIT",
+  "url": "https://github.com/aurel300/docopt.hx/",
+  "description": "Haxe port of docopt",
+  "releasenote": "Initial port",
+  "version": "0.6.2",
+  "contributors": ["aurel300"],
+  "classPath": "src",
+  "tags": ["cli", "cross", "parser", "utility"],
+  "dependencies": {}
+}
