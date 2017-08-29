@@ -67,7 +67,7 @@ class Main {
           return false;
         }
         if (try {
-            var args = command.split(" ").slice(1).filter(s -> s != "");
+            var args = command.split(" ").slice(1).filter(function(s) return s != "");
             var actual = Json.stringify(Docopt.parse(usage, args));
             if (expect == null) {
               mkFail('expected user-error, got:\n$actual');

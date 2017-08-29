@@ -9,7 +9,9 @@ class BranchPattern extends Pattern {
   }
   
   override public function toString():String {
-    return '$type(' + children.map(c -> c == null ? "null" : c.toString()).join(", ") + ")";
+    return '$type(' + children.map(function(c) {
+        return c == null ? "null" : c.toString();
+      }).join(", ") + ")";
   }
   
   override private function fixIdentities(?uniq:Array<Pattern>):Void {

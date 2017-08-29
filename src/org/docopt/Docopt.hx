@@ -65,7 +65,7 @@ class Docopt {
   
   private static function listSet<T>(arr:Array<T>, ?eq:T->T->Bool):Array<T> {
     if (eq == null) {
-      eq = ((a, b) -> a == b);
+      eq = function(a, b) return a == b;
     }
     var ret = [];
     for (el in arr) {
@@ -78,7 +78,7 @@ class Docopt {
   
   private static function listIn<T>(arr:Array<T>, s:T, ?eq:T->T->Bool):T {
     if (eq == null) {
-      eq = ((a, b) -> a == b);
+      eq = function(a, b) return a == b;
     }
     for (el in arr) {
       if (eq(el, s)) {
@@ -90,7 +90,7 @@ class Docopt {
   
   private static function count<T>(arr:Array<T>, s:T, ?eq:T->T->Bool):Int {
     if (eq == null) {
-      eq = ((a, b) -> a == b);
+      eq = function(a, b) return a == b;
     }
     var ret = 0;
     for (el in arr) {
