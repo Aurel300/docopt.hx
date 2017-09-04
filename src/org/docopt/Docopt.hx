@@ -374,7 +374,7 @@ class Docopt {
     tokens:Tokens, options:Array<Option>
   ):Array<Pattern> {
     var result = [];
-    while ([null, "]", ")", "|"].indexOf(tokens.current()) == -1) {
+    while (tokens.hasNext() && ["]", ")", "|"].indexOf(tokens.current()) == -1) {
       var atom = parseAtom(tokens, options);
       if (tokens.current() == "...") {
         atom = [new OneOrMore(atom)];

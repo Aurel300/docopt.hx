@@ -22,6 +22,10 @@ class Tokens {
     return list.shift();
   }
   
+  public function hasNext():Bool {
+    return list.length > 0;
+  }
+  
   public function current():String {
     return list[0];
   }
