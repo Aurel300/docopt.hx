@@ -1,3 +1,4 @@
+import haxe.DynamicAccess;
 import haxe.Json;
 import org.docopt.Docopt;
 
@@ -13,6 +14,33 @@ class Main {
   static inline var START    :Int    = 0;
   
   public static function main():Void {
+    // Platform identification
+    var sysln =
+#if js
+      js.Node.console.log;
+#else
+      Sys.println;
+#end
+    var sysout =
+#if js
+      js.Node.console.log;
+#else
+      Sys.print;
+#end
+    sysln("Running docopt tests on platform: " +
+#if cpp
+        "C++"
+#elseif js
+        "Javascript"
+#elseif neko
+        "Neko"
+#elseif php
+        "PHP"
+#else
+        "Unknown"
+#end
+      );
+    
     // Load testcases
     var tests = sys.io.File.getContent(TESTCASES).split("\n");
     var line  = 0;
@@ -29,6 +57,66 @@ class Main {
     // Intercept default exit / print behaviour
     Docopt.exit    = function (code:Int) { exitCode = code; throw Abort; };
     Docopt.println = function (msg:String) { /*Sys.println(msg);*/ };
+    
+    // JSON object equivalence
+    function mapNormalise(map:Map<String, Dynamic>):Dynamic {
+      var ret:DynamicAccess<Dynamic> = {};
+      for (k in map.keys()) {
+        ret.set(k, map[k]);
+      }
+      return ret;
+    }
+    
+    function equivalent(a:Dynamic, b:Dynamic):Bool {
+      var isArr  = Std.is(a, Array ) && Std.is(b, Array );
+      var isBool = Std.is(a, Bool  ) && Std.is(b, Bool  );
+      var isInt  = Std.is(a, Int   ) && Std.is(b, Int   );
+      var isNum  = Std.is(a, Float ) && Std.is(b, Float );
+      var isStr  = Std.is(a, String) && Std.is(b, String);
+      /*
+      trace('isArr: $isArr');
+      trace('isBool: $isBool');
+      trace('isInt: $isInt');
+      trace('isNum: $isNum');
+      trace('isStr: $isStr');
+      */
+      if (isArr) {
+        var arrA = (cast a:Array<Dynamic>);
+        var arrB = (cast b:Array<Dynamic>);
+        if (arrA.length != arrB.length) {
+          return false;
+        }
+        for (i in 0...arrA.length) {
+          if (!equivalent(arrA[i], arrB[i])) {
+            return false;
+          }
+        }
+      } else if (isBool) {
+        return (cast a:Bool) == (cast b:Bool);
+      } else if (isInt) {
+        return (cast a:Int) == (cast b:Int);
+      } else if (isNum) {
+        return (cast a:Float) == (cast b:Float);
+      } else if (isStr) {
+        return (cast a:String) == (cast b:String);
+      } else {
+        var objA:DynamicAccess<Dynamic> = a;
+        var objB:DynamicAccess<Dynamic> = b;
+        if (objA.keys().length != objB.keys().length) {
+          return false;
+        }
+        var keys = objA.keys().concat(objB.keys());
+        for (k in keys) {
+          if (!objA.exists(k) || !objB.exists(k)) {
+            return false;
+          }
+          if (!equivalent(objA.get(k), objB.get(k))) {
+            return false;
+          }
+        }
+      }
+      return true;
+    }
     
     while (line < tests.length && fail == 0) {
       var t = tests[line++];
@@ -58,21 +146,20 @@ class Main {
         var result = [ while (tests[line++] != "") tests[line - 1] ].join("\n");
         var expect = null;
         if (!result.startsWith('"user-error"')) {
-          // To make sure the JSON spacing is consistent:
-          expect = Json.stringify(Json.parse(result));
+          expect = Json.parse(result);
         }
         exitCode = -1;
         function mkFail(msg:String):Bool {
-          Sys.println('\n! (line $cline: $command), $msg');
+          sysln('\n! (line $cline: $command), $msg');
           return false;
         }
         if (try {
             var args = command.split(" ").slice(1).filter(function(s) return s != "");
-            var actual = Json.stringify(Docopt.parse(usage, args));
+            var actual = mapNormalise(Docopt.parse(usage, args));
             if (expect == null) {
-              mkFail('expected user-error, got:\n$actual');
-            } else if (actual != expect) {
-              mkFail('expected:\n$expect\n\ngot:\n$actual');
+              mkFail('expected user-error, got:\n${Std.string(actual)}');
+            } else if (!equivalent(actual, expect)) {
+              mkFail('expected:\n${Std.string(expect)}\n\ngot:\n${Std.string(actual)}');
             } else {
               true;
             }
@@ -85,17 +172,17 @@ class Main {
           } catch (ex:Dynamic) {
             mkFail('runtime error $ex');
           }) {
-          Sys.print(".");
+          sysout(".");
           success++;
         } else {
           fail++;
         }
       }
     }
-    Sys.println("");
-    Sys.println("---------------");
-    Sys.println('tests run:  $total');
-    Sys.println('successful: $success');
-    Sys.println('failed:     $fail');
+    sysln("");
+    sysln("---------------");
+    sysln('tests run:  $total');
+    sysln('successful: $success');
+    sysln('failed:     $fail');
   }
 }

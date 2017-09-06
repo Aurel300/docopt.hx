@@ -1,6 +1,6 @@
 package org.docopt;
 
 typedef SingleMatch = {
-     pos:Int
+     pos:Null<Int>
     ,match:LeafPattern
   };
