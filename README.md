@@ -83,4 +83,4 @@ Results in:
 
 ## Version ##
 
-This is `docopt.hx` version `0.6.3`, based on the reference implementation version `0.6.2`. It passes all the language-agnostic tests as of the time of writing, on the C++, Javascript, Neko, and PHP targets (see the `test/` directory).
+This is `docopt.hx` version `0.6.4`, based on the reference implementation version `0.6.2`. It passes all the language-agnostic tests as of the time of writing, on the C++, Javascript, Neko, and PHP targets (see the `test/` directory).
