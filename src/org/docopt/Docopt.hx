@@ -484,7 +484,7 @@ class Docopt {
     name:String, source:String
   ):Array<String> {
     var pattern = new EReg(
-        "^([^\\n]*" + name + "[^\\n]*\\n?(?:[ \\t].*?(?:\\n|$))*)", "im"
+        "^([^\\r\\n]*" + name + "[^\\r\\n]*\\r?\\n?(?:[ \\t].*?(?:\\r?\\n|$))*)", "im"
       );
     return [ for (s in regAll(pattern, source)) s.trim() ];
   }
