@@ -470,7 +470,7 @@ class Docopt {
     var defaults = [];
     for (s in parseSection("options:", doc)) {
       s = s.split(":").slice(1).join(":");
-      var split = regSplit(~/\n[ \t]*(-\S+?)/, "\n" + s).slice(1);
+      var split = regSplit(~/\r?\n[ \t]*(-\S+?)/, "\n" + s).slice(1);
       split = [ for (i in 0...Std.int(split.length / 2))
           split[i * 2] + split[i * 2 + 1]
         ];
@@ -504,7 +504,7 @@ class Docopt {
       for (o in options) {
         if (o.name == "-h" || o.name == "--help") {
           if (Docopt.bool(o.value)) {
-            Docopt.println(~/^\\n+|\\n+$/.replace(doc, ""));
+            Docopt.println(~/^[\r\n]+|[\r\n]+$/.replace(doc, ""));
             Docopt.exit(0);
           }
         }

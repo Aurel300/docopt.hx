@@ -4,8 +4,8 @@
   "url": "https://github.com/aurel300/docopt.hx/",
   "description": "Haxe port of docopt",
   "releasenote": "Consistent across targets",
-  "version": "0.6.3",
-  "contributors": ["aurel300"],
+  "version": "0.6.4",
+  "contributors": ["Aurel300"],
   "classPath": "src",
   "tags": ["cli", "cross", "parser", "utility"],
   "dependencies": {}
